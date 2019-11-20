@@ -2,6 +2,9 @@
 #define printf_error(fmt, ...) \
     fprintf(stderr, "error: " fmt "\n" __VA_OPT__(,) __VA_ARGS__)
 
+#define fprintf_error(file, fmt, ...) \
+    fprintf(file, "error: " fmt "\n" __VA_OPT__(,) __VA_ARGS__)
+
 #define printf_line(fmt, ...) \
     fprintf(stdout, fmt "\n" __VA_OPT__(,) __VA_ARGS__)
 

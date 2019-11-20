@@ -18,11 +18,19 @@ int error = NO_ERROR;
 struct
 {
     unsigned int log_flags;
+
+    // usage: ERROR_FSEEK, ERROR_FTELL,
     FILE *file;
+
+    // usage: ERROR_FOPEN,
     const char *file_name;
+    const char *file_mode;
+
     const char *buffer_size;
+
     const char *function_name;
     const char *argument_name;
+    
     const size_t size;
 
 } error_info;
