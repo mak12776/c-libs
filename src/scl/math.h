@@ -13,6 +13,8 @@
     ({ typeof(a) __result; (__builtin_ ## func ## _overflow(a, b, &__result)) \
     ? (error = ERROR_INT_OVERFLOW, 0) : __result; })
 
+#if 0
+
 static inline
 size_t max_size(uint8_t number, ...)
 {
@@ -70,3 +72,5 @@ size_t min_size(uint8_t number, ...)
 
     return min;
 }
+
+#endif

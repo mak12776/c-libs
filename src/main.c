@@ -1,5 +1,4 @@
 
-#define SCL_NO_BUFFER
 #include <scl.h>
 
 int main(int argc, char **argv)

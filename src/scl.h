@@ -11,13 +11,7 @@
 *       SCL_SAFE
 *       SCL_CHECK_LIMITS
 *       SCL_USE_UNSIGNED_CHAR
-*
-*       SCL_INCLUDE_BUFFER          	include scl/buffer.h
-*       SCL_INCLUDE_SAFE_IO          	include scl/sio.h
 */
-
-/* default macros */
-// None
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -28,8 +22,10 @@
 #include <errno.h>
 #include <time.h>
 
-#ifndef SCL_SAFE
-#define SCL_SAFE 1
+#ifdef SCL_SAFE
+#define SCL_IS_SAFE 1
+#else
+#define SCL_IS_SAFE 0
 #endif
 
 #ifdef COMPILE_SCL
@@ -53,20 +49,8 @@
 #define CHAR char
 #endif // SCL_USE_UNSIGNED_CHAR
 
-
 #include "scl/io.h"
 #include "scl/string.h"
-
-
-#ifdef SCL_INCLUDE_BUFFER
-#include "scl/buffer.h"
-#endif  // SCL_INCLUDE_BUFFER
-
-
-#ifdef SCL_INCLUDE_SAFE_IO
-#include "scl/safe_io.h"
-#endif  // SCL_INCLUDE_SAFE_IO
-
 
 #undef CHAR
 

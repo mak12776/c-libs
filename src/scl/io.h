@@ -24,7 +24,7 @@ size_t safe_fread(void *pntr, size_t size, FILE *file)
 	read_number = fread(pntr, 1, size, file);
 	if (read_number != size)
 	{
-		error = ERROR_IO;
+		error = ERROR_IO_FREAD;
 		error_info.file = file;
 	}
 	return read_number;
@@ -38,7 +38,7 @@ size_t safe_fwrite(void *pntr, size_t size, FILE *file)
 	write_number = fwrite(pntr, 1, size, file);
 	if (write_number != size)
 	{
-		error = ERROR_IO;
+		error = ERROR_IO_FWRITE;
 		error_info.file = file;
 	}
 	return write_number;
@@ -118,15 +118,9 @@ void read_file(FILE *file, void **buffer, size_t *size)
 
 	*size = file_size;
 
-	read_number = fread(*buffer, 1, *size, file);
-	if (read_number != (*size))
-	{
-		error = ERROR_IO;
-		error_info.file = file;
-
-		free(*buffer);
+	safe_fread(*buffer, *size, file);
+	if (error)
 		return;
-	}
 }
 
 static inline

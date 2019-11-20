@@ -6,7 +6,7 @@
 
 #define STRLEN(string) (sizeof(string) - 1)
 
-#define string_cmp(string, pntr) memcmp(pntr, string, STRLEN(string))
+#define STRING_CMP(string, pntr) memcmp(pntr, string, STRLEN(string))
 
 #define STRING_BUFFER_SIZE 1024
 char string_buffer[STRING_BUFFER_SIZE];
