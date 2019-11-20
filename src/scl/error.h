@@ -19,19 +19,20 @@ struct
 {
     unsigned int log_flags;
 
-    // usage: ERROR_FSEEK, ERROR_FTELL,
+    // usage:   ERROR_FSEEK, ERROR_FTELL, 
+    //          ERROR_ZERO_FILE_SIZE, 
+    //          ERROR_IO,
     FILE *file;
 
     // usage: ERROR_FOPEN,
     const char *file_name;
     const char *file_mode;
 
-    const char *buffer_size;
+    // usage: ERROR_NO_MEMORY
+    const size_t size;
 
     const char *function_name;
     const char *argument_name;
-    
-    const size_t size;
 
 } error_info;
 

@@ -17,6 +17,34 @@ FILE *safe_fopen(const char *name, const char *mode)
 }
 
 static inline
+size_t safe_fread(void *pntr, size_t size, FILE *file)
+{
+	size_t read_number;
+
+	read_number = fread(pntr, 1, size, file);
+	if (read_number != size)
+	{
+		error = ERROR_IO;
+		error_info.file = file;
+	}
+	return read_number;
+}
+
+static inline
+size_t safe_fwrite(void *pntr, size_t size, FILE *file)
+{
+	size_t write_number;
+
+	write_number = fwrite(pntr, 1, size, file);
+	if (write_number != size)
+	{
+		error = ERROR_IO;
+		error_info.file = file;
+	}
+	return write_number;
+}
+
+static inline
 void safe_fseek(FILE *file, long offset, int whence)
 {
 	if (fseek(file, offset, whence))
@@ -70,14 +98,13 @@ void read_file(FILE *file, void **buffer, size_t *size)
 	size_t read_number;
 
 	file_size = get_file_size(file);
-	if (error != NO_ERROR)
+	if (error)
 		return;
 
 	if (file_size == 0)
 	{
 		error = ERROR_ZERO_FILE_SIZE;
 		error_info.file = file;
-
 		return;
 	}
 
@@ -85,17 +112,14 @@ void read_file(FILE *file, void **buffer, size_t *size)
 		#error LONG_MAX is greater than SIZE_MAX.
 	#endif
 
-	*buffer = (void *)malloc(file_size);
-	if (!(*buffer))
-	{
-		error = ERROR_NO_MEMORY;
-		error_info.file = file
+	*buffer = safe_malloc(file_size);
+	if (error)
 		return;
-	}
+
 	*size = file_size;
 
-	read_number = fread(*buffer, 1, file_size, file);
-	if (read_number != (size_t)file_size)
+	read_number = fread(*buffer, 1, *size, file);
+	if (read_number != (*size))
 	{
 		error = ERROR_IO;
 		error_info.file = file;
@@ -110,13 +134,9 @@ void read_file_name(char *name, CHAR **buffer, size_t *size)
 {
 	FILE *file;
 
-	file = fopen(name, "rb");
-	if (file == NULL)
-	{
-		error = ERROR_FOPEN;
-		error_info.file_name = name;
+	file = safe_fopen(name, "rb");
+	if (error)
 		return;
-	}
 
 	read_file(file, buffer, size);
 	fclose(file);
