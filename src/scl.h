@@ -28,7 +28,7 @@
 #define SCL_IS_SAFE 0
 #endif
 
-#ifdef COMPILE_SCL
+#ifdef SCL_COMPILE
 #define SCL_DLL_EXPORT __declspec(dllexport)
 #else
 #define SCL_DLL_EXPORT __declspec(dllimport)
@@ -41,6 +41,7 @@
 #include "scl/error.h"
 #include "scl/math.h"
 #include "scl/random.h"
+#include "scl/mem.h"
 
 
 #ifdef SCL_USE_UNSIGNED_CHAR
@@ -53,7 +54,6 @@
 #include "scl/string.h"
 
 #undef CHAR
-
 
 #undef SCL_DLL_EXPORT
 

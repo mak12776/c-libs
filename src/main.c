@@ -1,5 +1,6 @@
 
 #include <scl.h>
+#include <buffer.h>
 
 int main(int argc, char **argv)
 {
@@ -11,9 +12,5 @@ int main(int argc, char **argv)
 		return EXIT_NORMAL;
 	}
 
-	char *buffer;
-	size_t size;
 
-	read_file_name(argv[1], &buffer, &size);
-	check_error();
 }

@@ -71,7 +71,7 @@ struct
 
 	// usage: 	ERROR_NO_MEMORY,
 	//          ERROR_IO_FREAD, ERROR_IO_FWRITE,
-	const size_t size;
+	size_t size;
 
 	// usage: 	ERROR_BAD_ARGUMENTS
 	const char *function_name;

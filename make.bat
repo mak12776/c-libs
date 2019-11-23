@@ -1,1 +1,1 @@
-gcc -Iscl src/*.c -o main
+gcc -Isrc/ src/main.c -o main

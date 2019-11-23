@@ -1,8 +1,4 @@
 
-/*  errors:
-*       ERROR_FSEEK, ERROR_FTELL
-*/
-
 static inline
 FILE *safe_fopen(const char *name, const char *mode)
 {
@@ -11,7 +7,7 @@ FILE *safe_fopen(const char *name, const char *mode)
 	{
 		error = ERROR_FOPEN;
 		error_info.file_name = name;
-		error_info.open_mode = mode;
+		error_info.file_mode = mode;
 	}
 	return file;
 }
@@ -87,10 +83,6 @@ long get_file_size(FILE *file)
 	return file_size;
 }
 
-/*  errors:
-*       ERROR_ZERO_FILE_SIZE
-*/
-
 static inline
 void read_file(FILE *file, void **buffer, size_t *size)
 {
@@ -120,11 +112,14 @@ void read_file(FILE *file, void **buffer, size_t *size)
 
 	safe_fread(*buffer, *size, file);
 	if (error)
+	{
+		free(*buffer);
 		return;
+	}
 }
 
 static inline
-void read_file_name(char *name, CHAR **buffer, size_t *size)
+void read_file_name(const char *name, void **buffer, size_t *size)
 {
 	FILE *file;
 

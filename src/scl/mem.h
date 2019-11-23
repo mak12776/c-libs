@@ -1,6 +1,4 @@
 
-#define ALLOCATE_TYPE(TYPE) (TYPE *)malloc(sizeof(TYPE))
-
 static inline
 void *safe_malloc(size_t size)
 {
