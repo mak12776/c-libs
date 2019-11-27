@@ -35,24 +35,18 @@ size_t buffer_count_lines(buffer_t *buffer);
 static inline
 void buffer_split_lines(buffer_t *buffer, view_t *lines);
 
-static inline
-size_t buffer_write_view(buffer_t *buffer, buffer_view_t *view, FILE *file);
-
-static inline
-size_t buffer_write_lines(buffer_t *buffer, buffer_views_t *lines, FILE *file);
-
 /* function definitions */
 
 static inline
 void buffer_read_file(buffer_t *buffer, FILE *file)
 {
-	read_file(file, &(buffer->pntr), &(buffer->size));
+	read_file(file, (void *) &(buffer->pntr), &(buffer->size));
 }
 
 static inline
 void buffer_read_file_name(buffer_t *buffer, char *name)
 {
-	read_file_name(name, &(buffer->pntr), &(buffer->size));
+	read_file_name(name, (void *) &(buffer->pntr), &(buffer->size));
 }
 
 static inline
@@ -70,116 +64,32 @@ size_t buffer_count_lines(buffer_t *buffer)
 #define CH (buffer->pntr[index])
 #define END (index == (buffer->size))
 
-		index = 0;
-		total = 0;
-
-		while (1)
-		{
-			if (CH == '\r')
-			{
-				total += 1;
-
-				index += 1;
-				if (END) break;
-
-				if (CH == '\n')
-				{
-					index += 1;
-					if (END) break;
-				}
-			}
-			else if (CH == '\n')
-			{
-				total += 1;
-
-				index += 1;
-				if (END) break;
-			}
-			else
-			{
-				index += 1;
-				if (END)
-				{
-					total += 1;
-					break;
-				}
-			}
-		}
-
-#undef CH
-#undef END
-
-	return total;
-}
-
-static inline
-void buffer_split_lines(buffer_t *buffer, buffer_views_t *lines)
-{
-	size_t index;
-	size_t lnum;
-	size_t total;
-
-	total = buffer_count_lines(buffer);
-	if (error) return;
-
-	lines_initialize_total(lines, total);
-	if (error) return;
-
-#define CH (buffer->pntr[index])
-#define END (index == buffer->size)
-#define LINE (lines->pntr[lnum])
-
 	index = 0;
-	lnum = 0;
+	total = 1;
 
 loop:
-	LINE.start = index;
-
-	while (1)
+	if (CH == '\r')
 	{
-		if (CH == '\n')
-		{
-			index += 1;
-			LINE.end = index;
+		total += 1;
 
-			if (END) break;
+		index += 1;
+		if (END) goto end;
 
-			lnum += 1;
-			goto loop;
-		}
-		else if (CH == '\r')
-		{
-			CH = '\n';
-
-			index += 1;
-			LINE.end = index;
-
-			if (END) break;
-
-			if (CH == '\n')
-			{
-				index += 1;
-				if (END) break;
-			}
-
-			lnum += 1;
-			goto loop;
-		}
-		else
-		{
-			index += 1;
-			if (END)
-			{
-				LINE.end = index;
-				break;
-			}
-		}
+		if (CH != '\n') goto loop;
 	}
+	else if (CH == '\n')
+	{
+		total += 1;
+	}
+
+	index += 1;
+	if (!END) goto loop;
 
 #undef CH
 #undef END
-#undef LINE
 
+end:
+	return total;
 }
 
 // buffer view
@@ -187,45 +97,27 @@ loop:
 static inline
 size_t view_find_test(view_t view, char *pntr, int (*test) (int ch))
 {
-	size_t index = view.start;
-	while (index < view.end)
-	{
-		if (test(pntr[index]))
-		{
-			return index;
-		}
-		index += 1;
-	}
-	return view.end;
+	return find_test(pntr, view.start, view.end, test);
 }
 
 static inline
 size_t view_rfind_test(view_t view, char *pntr, int (*test) (int ch))
 {
-	size_t index = view.end;
-	while (index > view.start)
-	{
-		index -= 1;
-		if (test(pntr[index]))
-		{
-			return index;
-		}
-	}
-	return view.end;
+	return rfind_test(pntr, view.start, view.end, test);
 }
 
 static inline
 size_t view_find_chr(view_t view, char *pntr, const char *string)
 {
 	int find_chr(int ch) { return chr_in(ch, string); }
-	return buffer_view_find_test(view, pntr, &find_chr);
+	return view_find_test(view, pntr, &find_chr);
 }
 
 static inline
 size_t view_rfind_chr(view_t view, char *pntr, const char *string)
 {
 	int find_chr(int ch) { return chr_in(ch, string); }
-	return buffer_view_rfind_test(view, pntr, &find_chr);
+	return view_rfind_test(view, pntr, &find_chr);
 }
 
 #endif // BUFFER_H
