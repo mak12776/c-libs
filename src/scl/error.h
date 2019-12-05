@@ -14,7 +14,9 @@
 
 #define ERROR_MAX 0xFF
 
-int error = NO_ERROR;
+typedef error_t uint32_t;
+
+error_t error = NO_ERROR;
 
 static inline
 void clear_error()
@@ -23,7 +25,7 @@ void clear_error()
 }
 
 static inline
-char *str_error(int error)
+char *str_error(error_t error)
 {
 #define ERROR_CASE(NAME) case NAME: return #NAME;
 	switch (error)
@@ -58,8 +60,6 @@ void check_error()
 
 struct
 {
-	unsigned int log_flags;
-
 	// usage:   ERROR_FSEEK, ERROR_FTELL, 
 	//          ERROR_ZERO_FILE_SIZE, 
 	//          ERROR_IO_FREAD, ERROR_IO_FWRITE,

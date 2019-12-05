@@ -32,9 +32,6 @@ void buffer_read_file_name(buffer_t *buffer, char *name);
 static inline
 size_t buffer_count_lines(buffer_t *buffer);
 
-static inline
-void buffer_split_lines(buffer_t *buffer, view_t *lines);
-
 /* function definitions */
 
 static inline
